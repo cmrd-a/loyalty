@@ -9,10 +9,10 @@ readme = "README.md"
 python = "^3.10"
 grpcio = "^1.51.1"
 grpcio-tools = "^1.51.1"
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.0b4", allow-prereleases = true}
-alembic = {version = "^1.8.1", allow-prereleases = true}
+alembic = "1.9.0"
 pydantic = "^1.10.2"
 grpcio-reflection = "^1.51.1"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.0b4", allow-prereleases = true}
 
 [tool.black]
 line-length = 120
@@ -26,7 +26,7 @@ ignore = ["E999"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
-ruff = "^0.0.175"
+ruff = "^0.0.187"
 
 [build-system]
 requires = ["poetry-core"]
