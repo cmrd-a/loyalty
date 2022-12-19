@@ -6,7 +6,7 @@ from grpc_reflection.v1alpha import reflection
 
 import helloworld_pb2
 import helloworld_pb2_grpc
-from models import make_eng
+from models import connect_to_pg
 
 
 class Greeter(helloworld_pb2_grpc.GreeterServicer):
@@ -17,7 +17,7 @@ class Greeter(helloworld_pb2_grpc.GreeterServicer):
 
 
 async def serve() -> None:
-    await make_eng()
+    await connect_to_pg()
     server = grpc.aio.server()
     helloworld_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
 
