@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package loyalty;
+
+
+service PromoCode {
+  rpc CreateV1 (CreatePromoCodeRequestV1) returns (CommonResponse) {}
+  rpc ReserveV1 (CommonPromoCodeRequestV1) returns (CommonResponse) {}
+  rpc FreeV1 (CommonPromoCodeRequestV1) returns (CommonResponse) {}
+  rpc ApplyV1 (CommonPromoCodeRequestV1) returns (CommonResponse) {}
+}
+
+service Discount {
+  rpc CreateV1 (CreateDiscountRequestV1) returns (CommonResponse) {}
+  rpc GetV1 (GetDiscountRequestV1) returns (GetDiscountResponseV1) {}
+}
+
+message CreatePromoCodeRequestV1 {
+  optional string id = 1;
+  google.protobuf.Timestamp expired_at = 2;
+  repeated int64 users_ids = 3;
+  int32 discount_percents = 4;
+  bool send_emails = 5;
+}
+
+message CommonResponse {
+  string id = 1;
+}
+
+message CommonPromoCodeRequestV1 {
+  string promo_code = 1;
+  int64 user_id = 2;
+}
+
+message CreateDiscountRequestV1 {
+  int32 discount_percents = 1;
+  int64 user_id = 2;
+}
+
+message GetDiscountRequestV1 {
+  int64 user_id = 1;
+}
+
+message GetDiscountResponseV1 {
+  int32 discount_percents = 1;
+}
