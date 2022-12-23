@@ -4,10 +4,10 @@ import logging
 import grpc
 from grpc_reflection.v1alpha import reflection
 
-import db
+from database import db
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
-from servicers import PromoCode, Discount
+from database.servicers import PromoCode, Discount
 
 _cleanup_coroutines = []
 

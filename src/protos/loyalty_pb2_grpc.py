@@ -17,22 +17,22 @@ class PromoCodeStub(object):
         self.CreateV1 = channel.unary_unary(
                 '/loyalty.PromoCode/CreateV1',
                 request_serializer=loyalty__pb2.CreatePromoCodeRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponse.FromString,
+                response_deserializer=loyalty__pb2.CreatePromoCodeResponseV1.FromString,
                 )
         self.ReserveV1 = channel.unary_unary(
                 '/loyalty.PromoCode/ReserveV1',
                 request_serializer=loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponse.FromString,
+                response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
                 )
         self.FreeV1 = channel.unary_unary(
                 '/loyalty.PromoCode/FreeV1',
                 request_serializer=loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponse.FromString,
+                response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
                 )
         self.ApplyV1 = channel.unary_unary(
                 '/loyalty.PromoCode/ApplyV1',
                 request_serializer=loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponse.FromString,
+                response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
                 )
 
 
@@ -69,22 +69,22 @@ def add_PromoCodeServicer_to_server(servicer, server):
             'CreateV1': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateV1,
                     request_deserializer=loyalty__pb2.CreatePromoCodeRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponse.SerializeToString,
+                    response_serializer=loyalty__pb2.CreatePromoCodeResponseV1.SerializeToString,
             ),
             'ReserveV1': grpc.unary_unary_rpc_method_handler(
                     servicer.ReserveV1,
                     request_deserializer=loyalty__pb2.CommonPromoCodeRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponse.SerializeToString,
+                    response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
             ),
             'FreeV1': grpc.unary_unary_rpc_method_handler(
                     servicer.FreeV1,
                     request_deserializer=loyalty__pb2.CommonPromoCodeRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponse.SerializeToString,
+                    response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
             ),
             'ApplyV1': grpc.unary_unary_rpc_method_handler(
                     servicer.ApplyV1,
                     request_deserializer=loyalty__pb2.CommonPromoCodeRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponse.SerializeToString,
+                    response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -109,7 +109,7 @@ class PromoCode(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.PromoCode/CreateV1',
             loyalty__pb2.CreatePromoCodeRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponse.FromString,
+            loyalty__pb2.CreatePromoCodeResponseV1.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -126,7 +126,7 @@ class PromoCode(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.PromoCode/ReserveV1',
             loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponse.FromString,
+            loyalty__pb2.CommonResponseV1.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -143,7 +143,7 @@ class PromoCode(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.PromoCode/FreeV1',
             loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponse.FromString,
+            loyalty__pb2.CommonResponseV1.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -160,7 +160,7 @@ class PromoCode(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.PromoCode/ApplyV1',
             loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponse.FromString,
+            loyalty__pb2.CommonResponseV1.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -177,7 +177,7 @@ class DiscountStub(object):
         self.CreateV1 = channel.unary_unary(
                 '/loyalty.Discount/CreateV1',
                 request_serializer=loyalty__pb2.CreateDiscountRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponse.FromString,
+                response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
                 )
         self.GetV1 = channel.unary_unary(
                 '/loyalty.Discount/GetV1',
@@ -207,7 +207,7 @@ def add_DiscountServicer_to_server(servicer, server):
             'CreateV1': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateV1,
                     request_deserializer=loyalty__pb2.CreateDiscountRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponse.SerializeToString,
+                    response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
             ),
             'GetV1': grpc.unary_unary_rpc_method_handler(
                     servicer.GetV1,
@@ -237,7 +237,7 @@ class Discount(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.Discount/CreateV1',
             loyalty__pb2.CreateDiscountRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponse.FromString,
+            loyalty__pb2.CommonResponseV1.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

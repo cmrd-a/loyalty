@@ -6,31 +6,41 @@ package loyalty;
 
 
 service PromoCode {
-  rpc CreateV1 (CreatePromoCodeRequestV1) returns (CommonResponse) {}
-  rpc ReserveV1 (CommonPromoCodeRequestV1) returns (CommonResponse) {}
-  rpc FreeV1 (CommonPromoCodeRequestV1) returns (CommonResponse) {}
-  rpc ApplyV1 (CommonPromoCodeRequestV1) returns (CommonResponse) {}
+  rpc CreateV1 (CreatePromoCodeRequestV1) returns (CreatePromoCodeResponseV1) {}
+  rpc ReserveV1 (CommonPromoCodeRequestV1) returns (CommonResponseV1) {}
+  rpc FreeV1 (CommonPromoCodeRequestV1) returns (CommonResponseV1) {}
+  rpc ApplyV1 (CommonPromoCodeRequestV1) returns (CommonResponseV1) {}
 }
 
 service Discount {
-  rpc CreateV1 (CreateDiscountRequestV1) returns (CommonResponse) {}
+  rpc CreateV1 (CreateDiscountRequestV1) returns (CommonResponseV1) {}
   rpc GetV1 (GetDiscountRequestV1) returns (GetDiscountResponseV1) {}
 }
 
 message CreatePromoCodeRequestV1 {
-  string id = 1;
+  string code = 1;
+  int32 discount_percents = 4;
+  int32 activation_quantity=6;
   google.protobuf.Timestamp expired_at = 2;
   repeated int64 users_ids = 3;
-  int32 discount_percents = 4;
   bool send_email = 5;
 }
 
-message CommonResponse {
+message CreatePromoCodeResponseV1 {
+  string id = 1;
+  string code = 2;
+  int32 discount_percents = 3;
+  int32 activation_quantity=4;
+  google.protobuf.Timestamp expired_at = 5;
+  repeated int64 users_ids = 6;
+}
+
+message CommonResponseV1 {
   string id = 1;
 }
 
 message CommonPromoCodeRequestV1 {
-  string promo_code = 1;
+  string code = 1;
   int64 user_id = 2;
 }
 

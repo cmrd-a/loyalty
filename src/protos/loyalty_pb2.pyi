@@ -7,14 +7,14 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class CommonPromoCodeRequestV1(_message.Message):
-    __slots__ = ["promo_code", "user_id"]
-    PROMO_CODE_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ["code", "user_id"]
+    CODE_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
-    promo_code: str
+    code: str
     user_id: int
-    def __init__(self, promo_code: _Optional[str] = ..., user_id: _Optional[int] = ...) -> None: ...
+    def __init__(self, code: _Optional[str] = ..., user_id: _Optional[int] = ...) -> None: ...
 
-class CommonResponse(_message.Message):
+class CommonResponseV1(_message.Message):
     __slots__ = ["id"]
     ID_FIELD_NUMBER: _ClassVar[int]
     id: str
@@ -29,18 +29,36 @@ class CreateDiscountRequestV1(_message.Message):
     def __init__(self, discount_percents: _Optional[int] = ..., user_id: _Optional[int] = ...) -> None: ...
 
 class CreatePromoCodeRequestV1(_message.Message):
-    __slots__ = ["discount_percents", "expired_at", "id", "send_email", "users_ids"]
+    __slots__ = ["activation_quantity", "code", "discount_percents", "expired_at", "send_email", "users_ids"]
+    ACTIVATION_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    CODE_FIELD_NUMBER: _ClassVar[int]
+    DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
+    EXPIRED_AT_FIELD_NUMBER: _ClassVar[int]
+    SEND_EMAIL_FIELD_NUMBER: _ClassVar[int]
+    USERS_IDS_FIELD_NUMBER: _ClassVar[int]
+    activation_quantity: int
+    code: str
+    discount_percents: int
+    expired_at: _timestamp_pb2.Timestamp
+    send_email: bool
+    users_ids: _containers.RepeatedScalarFieldContainer[int]
+    def __init__(self, code: _Optional[str] = ..., discount_percents: _Optional[int] = ..., activation_quantity: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ..., send_email: bool = ...) -> None: ...
+
+class CreatePromoCodeResponseV1(_message.Message):
+    __slots__ = ["activation_quantity", "code", "discount_percents", "expired_at", "id", "users_ids"]
+    ACTIVATION_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    CODE_FIELD_NUMBER: _ClassVar[int]
     DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
     EXPIRED_AT_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
-    SEND_EMAIL_FIELD_NUMBER: _ClassVar[int]
     USERS_IDS_FIELD_NUMBER: _ClassVar[int]
+    activation_quantity: int
+    code: str
     discount_percents: int
     expired_at: _timestamp_pb2.Timestamp
     id: str
-    send_email: bool
     users_ids: _containers.RepeatedScalarFieldContainer[int]
-    def __init__(self, id: _Optional[str] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ..., discount_percents: _Optional[int] = ..., send_email: bool = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., code: _Optional[str] = ..., discount_percents: _Optional[int] = ..., activation_quantity: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ...) -> None: ...
 
 class GetDiscountRequestV1(_message.Message):
     __slots__ = ["user_id"]
