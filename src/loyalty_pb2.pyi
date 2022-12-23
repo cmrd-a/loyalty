@@ -29,18 +29,18 @@ class CreateDiscountRequestV1(_message.Message):
     def __init__(self, discount_percents: _Optional[int] = ..., user_id: _Optional[int] = ...) -> None: ...
 
 class CreatePromoCodeRequestV1(_message.Message):
-    __slots__ = ["discount_percents", "expired_at", "id", "send_emails", "users_ids"]
+    __slots__ = ["discount_percents", "expired_at", "id", "send_email", "users_ids"]
     DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
     EXPIRED_AT_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
-    SEND_EMAILS_FIELD_NUMBER: _ClassVar[int]
+    SEND_EMAIL_FIELD_NUMBER: _ClassVar[int]
     USERS_IDS_FIELD_NUMBER: _ClassVar[int]
     discount_percents: int
     expired_at: _timestamp_pb2.Timestamp
     id: str
-    send_emails: bool
+    send_email: bool
     users_ids: _containers.RepeatedScalarFieldContainer[int]
-    def __init__(self, id: _Optional[str] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ..., discount_percents: _Optional[int] = ..., send_emails: bool = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ..., discount_percents: _Optional[int] = ..., send_email: bool = ...) -> None: ...
 
 class GetDiscountRequestV1(_message.Message):
     __slots__ = ["user_id"]

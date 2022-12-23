@@ -4,42 +4,12 @@ import logging
 import grpc
 from grpc_reflection.v1alpha import reflection
 
+import db
 import loyalty_pb2
 import loyalty_pb2_grpc
+from servicers import PromoCode, Discount
 
-
-class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
-    async def CreateV1(
-        self, request: loyalty_pb2.CreatePromoCodeRequestV1, context: grpc.aio.ServicerContext
-    ) -> loyalty_pb2.CommonResponse:
-        return loyalty_pb2.CommonResponse(id="1")
-
-    async def ReserveV1(
-        self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: grpc.aio.ServicerContext
-    ) -> loyalty_pb2.CommonResponse:
-        return loyalty_pb2.CommonResponse(id="1")
-
-    async def FreeV1(
-        self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: grpc.aio.ServicerContext
-    ) -> loyalty_pb2.CommonResponse:
-        return loyalty_pb2.CommonResponse(id="1")
-
-    async def ApplyV1(
-        self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: grpc.aio.ServicerContext
-    ) -> loyalty_pb2.CommonResponse:
-        return loyalty_pb2.CommonResponse(id="1")
-
-
-class Discount(loyalty_pb2_grpc.DiscountServicer):
-    async def CreateV1(
-        self, request: loyalty_pb2.CreateDiscountRequestV1, context: grpc.aio.ServicerContext
-    ) -> loyalty_pb2.CommonResponse:
-        return loyalty_pb2.CommonResponse(id="1")
-
-    async def GetV1(
-        self, request: loyalty_pb2.GetDiscountRequestV1, context: grpc.aio.ServicerContext
-    ) -> loyalty_pb2.GetDiscountResponseV1:
-        return loyalty_pb2.GetDiscountResponseV1(discount_percents=1)
+_cleanup_coroutines = []
 
 
 async def serve() -> None:
@@ -58,9 +28,24 @@ async def serve() -> None:
     server.add_insecure_port(listen_addr)
     logging.info("Starting server on %s", listen_addr)
     await server.start()
+    await server.start()
+
+    async def server_graceful_shutdown():
+        logging.info("Starting graceful shutdown...")
+        await db.engine.dispose()
+        await server.stop(5)
+
+    _cleanup_coroutines.append(server_graceful_shutdown())
     await server.wait_for_termination()
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    asyncio.run(serve())
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    try:
+        loop.run_until_complete(serve())
+    finally:
+        loop.run_until_complete(*_cleanup_coroutines)
+        loop.close()

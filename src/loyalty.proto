@@ -18,11 +18,11 @@ service Discount {
 }
 
 message CreatePromoCodeRequestV1 {
-  optional string id = 1;
+  string id = 1;
   google.protobuf.Timestamp expired_at = 2;
   repeated int64 users_ids = 3;
   int32 discount_percents = 4;
-  bool send_emails = 5;
+  bool send_email = 5;
 }
 
 message CommonResponse {
