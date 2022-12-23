@@ -5,8 +5,8 @@ import grpc
 from grpc_reflection.v1alpha import reflection
 
 import db
-import loyalty_pb2
-import loyalty_pb2_grpc
+from protos import loyalty_pb2
+from protos import loyalty_pb2_grpc
 from servicers import PromoCode, Discount
 
 _cleanup_coroutines = []

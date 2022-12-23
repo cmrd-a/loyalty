@@ -1,8 +1,8 @@
 import grpc
 
 import db
-import loyalty_pb2
-import loyalty_pb2_grpc
+from protos import loyalty_pb2
+from protos import loyalty_pb2_grpc
 
 
 class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
