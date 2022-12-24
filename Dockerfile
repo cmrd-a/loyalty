@@ -14,4 +14,5 @@ RUN poetry config virtualenvs.create false && poetry install --no-dev --no-inter
 
 COPY src .
 
-CMD python main.py
+RUN ["chmod", "+x", "/opt/app/entrypoint.sh"]
+CMD ["/opt/app/entrypoint.sh"]
