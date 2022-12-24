@@ -12,31 +12,34 @@ _sym_db = _symbol_database.Default()
 
 
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rloyalty.proto\x12\x07loyalty\x1a\x1fgoogle/protobuf/timestamp.proto\"\xb7\x01\n\x18\x43reatePromoCodeRequestV1\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x19\n\x11\x64iscount_percents\x18\x04 \x01(\x05\x12\x1b\n\x13\x61\x63tivation_quantity\x18\x06 \x01(\x05\x12.\n\nexpired_at\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tusers_ids\x18\x03 \x03(\x03\x12\x12\n\nsend_email\x18\x05 \x01(\x08\"\xb0\x01\n\x19\x43reatePromoCodeResponseV1\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\x12\x19\n\x11\x64iscount_percents\x18\x03 \x01(\x05\x12\x1b\n\x13\x61\x63tivation_quantity\x18\x04 \x01(\x05\x12.\n\nexpired_at\x18\x05 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tusers_ids\x18\x06 \x03(\x03\"\x1e\n\x10\x43ommonResponseV1\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x18\x43ommonPromoCodeRequestV1\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\x03\"E\n\x17\x43reateDiscountRequestV1\x12\x19\n\x11\x64iscount_percents\x18\x01 \x01(\x05\x12\x0f\n\x07user_id\x18\x02 \x01(\x03\"\'\n\x14GetDiscountRequestV1\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\"2\n\x15GetDiscountResponseV1\x12\x19\n\x11\x64iscount_percents\x18\x01 \x01(\x05\x32\xc2\x02\n\tPromoCode\x12S\n\x08\x43reateV1\x12!.loyalty.CreatePromoCodeRequestV1\x1a\".loyalty.CreatePromoCodeResponseV1\"\x00\x12K\n\tReserveV1\x12!.loyalty.CommonPromoCodeRequestV1\x1a\x19.loyalty.CommonResponseV1\"\x00\x12H\n\x06\x46reeV1\x12!.loyalty.CommonPromoCodeRequestV1\x1a\x19.loyalty.CommonResponseV1\"\x00\x12I\n\x07\x41pplyV1\x12!.loyalty.CommonPromoCodeRequestV1\x1a\x19.loyalty.CommonResponseV1\"\x00\x32\x9f\x01\n\x08\x44iscount\x12I\n\x08\x43reateV1\x12 .loyalty.CreateDiscountRequestV1\x1a\x19.loyalty.CommonResponseV1\"\x00\x12H\n\x05GetV1\x12\x1d.loyalty.GetDiscountRequestV1\x1a\x1e.loyalty.GetDiscountResponseV1\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rloyalty.proto\x12\x07loyalty\x1a\x1fgoogle/protobuf/timestamp.proto\x1a\x1bgoogle/protobuf/empty.proto\"\xb7\x01\n\x18\x43reatePromoCodeRequestV1\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x19\n\x11\x64iscount_percents\x18\x02 \x01(\x05\x12\x1b\n\x13\x61\x63tivation_quantity\x18\x03 \x01(\x05\x12.\n\nexpired_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tusers_ids\x18\x05 \x03(\x03\x12\x12\n\nsend_email\x18\x06 \x01(\x08\"\x93\x01\n\x19\x43reatePromoCodeResponseV1\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04\x63ode\x18\x02 \x01(\t\x12\x19\n\x11\x64iscount_percents\x18\x03 \x01(\x05\x12.\n\nexpired_at\x18\x04 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x11\n\tusers_ids\x18\x05 \x03(\x03\"\x1e\n\x10\x43ommonResponseV1\x12\n\n\x02id\x18\x01 \x01(\t\"9\n\x18\x43ommonPromoCodeRequestV1\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0f\n\x07user_id\x18\x02 \x01(\x03\"(\n\x12ReserveIdRequestV1\x12\x12\n\nreserve_id\x18\x01 \x01(\t\"u\n\x17\x43reateDiscountRequestV1\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\x12\x19\n\x11\x64iscount_percents\x18\x02 \x01(\x05\x12.\n\nexpired_at\x18\x03 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\"\'\n\x14GetDiscountRequestV1\x12\x0f\n\x07user_id\x18\x01 \x01(\x03\"2\n\x15GetDiscountResponseV1\x12\x19\n\x11\x64iscount_percents\x18\x01 \x01(\x05\x32\xb0\x02\n\tPromoCode\x12S\n\x08\x43reateV1\x12!.loyalty.CreatePromoCodeRequestV1\x1a\".loyalty.CreatePromoCodeResponseV1\"\x00\x12K\n\tReserveV1\x12!.loyalty.CommonPromoCodeRequestV1\x1a\x19.loyalty.CommonResponseV1\"\x00\x12?\n\x06\x46reeV1\x12\x1b.loyalty.ReserveIdRequestV1\x1a\x16.google.protobuf.Empty\"\x00\x12@\n\x07\x41pplyV1\x12\x1b.loyalty.ReserveIdRequestV1\x1a\x16.google.protobuf.Empty\"\x00\x32\x9f\x01\n\x08\x44iscount\x12I\n\x08\x43reateV1\x12 .loyalty.CreateDiscountRequestV1\x1a\x19.loyalty.CommonResponseV1\"\x00\x12H\n\x05GetV1\x12\x1d.loyalty.GetDiscountRequestV1\x1a\x1e.loyalty.GetDiscountResponseV1\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'loyalty_pb2', globals())
 if _descriptor._USE_C_DESCRIPTORS == False:
 
   DESCRIPTOR._options = None
-  _CREATEPROMOCODEREQUESTV1._serialized_start=60
-  _CREATEPROMOCODEREQUESTV1._serialized_end=243
-  _CREATEPROMOCODERESPONSEV1._serialized_start=246
+  _CREATEPROMOCODEREQUESTV1._serialized_start=89
+  _CREATEPROMOCODEREQUESTV1._serialized_end=272
+  _CREATEPROMOCODERESPONSEV1._serialized_start=275
   _CREATEPROMOCODERESPONSEV1._serialized_end=422
   _COMMONRESPONSEV1._serialized_start=424
   _COMMONRESPONSEV1._serialized_end=454
   _COMMONPROMOCODEREQUESTV1._serialized_start=456
   _COMMONPROMOCODEREQUESTV1._serialized_end=513
-  _CREATEDISCOUNTREQUESTV1._serialized_start=515
-  _CREATEDISCOUNTREQUESTV1._serialized_end=584
-  _GETDISCOUNTREQUESTV1._serialized_start=586
-  _GETDISCOUNTREQUESTV1._serialized_end=625
-  _GETDISCOUNTRESPONSEV1._serialized_start=627
-  _GETDISCOUNTRESPONSEV1._serialized_end=677
-  _PROMOCODE._serialized_start=680
-  _PROMOCODE._serialized_end=1002
-  _DISCOUNT._serialized_start=1005
-  _DISCOUNT._serialized_end=1164
+  _RESERVEIDREQUESTV1._serialized_start=515
+  _RESERVEIDREQUESTV1._serialized_end=555
+  _CREATEDISCOUNTREQUESTV1._serialized_start=557
+  _CREATEDISCOUNTREQUESTV1._serialized_end=674
+  _GETDISCOUNTREQUESTV1._serialized_start=676
+  _GETDISCOUNTREQUESTV1._serialized_end=715
+  _GETDISCOUNTRESPONSEV1._serialized_start=717
+  _GETDISCOUNTRESPONSEV1._serialized_end=767
+  _PROMOCODE._serialized_start=770
+  _PROMOCODE._serialized_end=1074
+  _DISCOUNT._serialized_start=1077
+  _DISCOUNT._serialized_end=1236
 # @@protoc_insertion_point(module_scope)

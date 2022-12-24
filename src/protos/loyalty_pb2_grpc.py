@@ -2,6 +2,7 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 import loyalty_pb2 as loyalty__pb2
 
 
@@ -26,13 +27,13 @@ class PromoCodeStub(object):
                 )
         self.FreeV1 = channel.unary_unary(
                 '/loyalty.PromoCode/FreeV1',
-                request_serializer=loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
+                request_serializer=loyalty__pb2.ReserveIdRequestV1.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
         self.ApplyV1 = channel.unary_unary(
                 '/loyalty.PromoCode/ApplyV1',
-                request_serializer=loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
+                request_serializer=loyalty__pb2.ReserveIdRequestV1.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
 
 
@@ -78,13 +79,13 @@ def add_PromoCodeServicer_to_server(servicer, server):
             ),
             'FreeV1': grpc.unary_unary_rpc_method_handler(
                     servicer.FreeV1,
-                    request_deserializer=loyalty__pb2.CommonPromoCodeRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
+                    request_deserializer=loyalty__pb2.ReserveIdRequestV1.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'ApplyV1': grpc.unary_unary_rpc_method_handler(
                     servicer.ApplyV1,
-                    request_deserializer=loyalty__pb2.CommonPromoCodeRequestV1.FromString,
-                    response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
+                    request_deserializer=loyalty__pb2.ReserveIdRequestV1.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -142,8 +143,8 @@ class PromoCode(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.PromoCode/FreeV1',
-            loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponseV1.FromString,
+            loyalty__pb2.ReserveIdRequestV1.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
@@ -159,8 +160,8 @@ class PromoCode(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/loyalty.PromoCode/ApplyV1',
-            loyalty__pb2.CommonPromoCodeRequestV1.SerializeToString,
-            loyalty__pb2.CommonResponseV1.FromString,
+            loyalty__pb2.ReserveIdRequestV1.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

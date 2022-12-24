@@ -1,4 +1,5 @@
 from google.protobuf import timestamp_pb2 as _timestamp_pb2
+from google.protobuf import empty_pb2 as _empty_pb2
 from google.protobuf.internal import containers as _containers
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
@@ -21,12 +22,14 @@ class CommonResponseV1(_message.Message):
     def __init__(self, id: _Optional[str] = ...) -> None: ...
 
 class CreateDiscountRequestV1(_message.Message):
-    __slots__ = ["discount_percents", "user_id"]
+    __slots__ = ["discount_percents", "expired_at", "user_id"]
     DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
+    EXPIRED_AT_FIELD_NUMBER: _ClassVar[int]
     USER_ID_FIELD_NUMBER: _ClassVar[int]
     discount_percents: int
+    expired_at: _timestamp_pb2.Timestamp
     user_id: int
-    def __init__(self, discount_percents: _Optional[int] = ..., user_id: _Optional[int] = ...) -> None: ...
+    def __init__(self, user_id: _Optional[int] = ..., discount_percents: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
 
 class CreatePromoCodeRequestV1(_message.Message):
     __slots__ = ["activation_quantity", "code", "discount_percents", "expired_at", "send_email", "users_ids"]
@@ -45,20 +48,18 @@ class CreatePromoCodeRequestV1(_message.Message):
     def __init__(self, code: _Optional[str] = ..., discount_percents: _Optional[int] = ..., activation_quantity: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ..., send_email: bool = ...) -> None: ...
 
 class CreatePromoCodeResponseV1(_message.Message):
-    __slots__ = ["activation_quantity", "code", "discount_percents", "expired_at", "id", "users_ids"]
-    ACTIVATION_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    __slots__ = ["code", "discount_percents", "expired_at", "id", "users_ids"]
     CODE_FIELD_NUMBER: _ClassVar[int]
     DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
     EXPIRED_AT_FIELD_NUMBER: _ClassVar[int]
     ID_FIELD_NUMBER: _ClassVar[int]
     USERS_IDS_FIELD_NUMBER: _ClassVar[int]
-    activation_quantity: int
     code: str
     discount_percents: int
     expired_at: _timestamp_pb2.Timestamp
     id: str
     users_ids: _containers.RepeatedScalarFieldContainer[int]
-    def __init__(self, id: _Optional[str] = ..., code: _Optional[str] = ..., discount_percents: _Optional[int] = ..., activation_quantity: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., code: _Optional[str] = ..., discount_percents: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ...) -> None: ...
 
 class GetDiscountRequestV1(_message.Message):
     __slots__ = ["user_id"]
@@ -71,3 +72,9 @@ class GetDiscountResponseV1(_message.Message):
     DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
     discount_percents: int
     def __init__(self, discount_percents: _Optional[int] = ...) -> None: ...
+
+class ReserveIdRequestV1(_message.Message):
+    __slots__ = ["reserve_id"]
+    RESERVE_ID_FIELD_NUMBER: _ClassVar[int]
+    reserve_id: str
+    def __init__(self, reserve_id: _Optional[str] = ...) -> None: ...

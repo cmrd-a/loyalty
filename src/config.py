@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     pg_host: str = Field(env="LOYALTY_POSTGRES_HOST")
     pg_port: int = Field(env="LOYALTY_POSTGRES_PORT")
 
+    reserve_timeout_seconds: int = Field(env="RESERVE_TIMEOUT_SECONDS", default=900)
+
     @property
     def pg_connection_sting(self):
         return f"{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.pg_db}"

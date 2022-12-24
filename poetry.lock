@@ -477,6 +477,18 @@ dotenv = ["python-dotenv (>=0.10.4)"]
 email = ["email-validator (>=1.0.3)"]
 
 [[package]]
+name = "pytz"
+version = "2022.7"
+description = "World timezone definitions, modern and historical"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "pytz-2022.7-py2.py3-none-any.whl", hash = "sha256:93007def75ae22f7cd991c84e02d434876818661f8df9ad5df9e950ff4e52cfd"},
+    {file = "pytz-2022.7.tar.gz", hash = "sha256:7ccfae7b4b2c067464a6733c6261673fdb8fd1be905460396b97a073e9fa683a"},
+]
+
+[[package]]
 name = "ruff"
 version = "0.0.192"
 description = "An extremely fast Python linter, written in Rust."
@@ -624,4 +636,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "c15d5f6010339a44d634d1b85b4353e678054a8e3d4fcc37f4ae6483d0e3e7c9"
+content-hash = "39d2324f2a3b69dc645f297019febcf3e5c0c692096a59782fbd66b05d2b0d45"

@@ -4,15 +4,17 @@ import logging
 import grpc
 from grpc_reflection.v1alpha import reflection
 
-from database import db
+from database.models import connect_to_pg
+from database.pg_service import pg_service
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
-from database.servicers import PromoCode, Discount
+from servicers import PromoCode, Discount
 
 _cleanup_coroutines = []
 
 
 async def serve() -> None:
+    # await connect_to_pg()
     server = grpc.aio.server()
     loyalty_pb2_grpc.add_PromoCodeServicer_to_server(PromoCode(), server)
     loyalty_pb2_grpc.add_DiscountServicer_to_server(Discount(), server)
@@ -32,7 +34,7 @@ async def serve() -> None:
 
     async def server_graceful_shutdown():
         logging.info("Starting graceful shutdown...")
-        await db.engine.dispose()
+        await pg_service.engine.dispose()
         await server.stop(5)
 
     _cleanup_coroutines.append(server_graceful_shutdown())
