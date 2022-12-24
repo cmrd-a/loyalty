@@ -1,13 +1,10 @@
+import enum
 import uuid
 from datetime import datetime
-import enum
+
 from sqlalchemy import String, DateTime, text, Integer, SmallInteger, func, ARRAY, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, ENUM
-from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-
-
-from config import config
 
 
 @enum.unique
@@ -78,14 +75,3 @@ class Log(Base):
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.code!r}, {self.user_id!r})"
-
-
-async def connect_to_pg():
-    engine = create_async_engine(
-        f"postgresql+asyncpg://{config.pg_connection_sting}",
-        # echo=True
-    )
-    async with engine.begin() as conn:
-        await conn.execute(text('CREATE EXTENSION IF NOT EXISTS "uuid-ossp" WITH SCHEMA public;'))
-        await conn.run_sync(Base.metadata.drop_all)
-        await conn.run_sync(Base.metadata.create_all)

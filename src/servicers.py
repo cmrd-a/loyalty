@@ -20,7 +20,6 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
         promo_code = await pg_service.create_promo_code(
             request.code,
             request.discount_percents,
-            request.activation_quantity,
             request.expired_at.ToDatetime(),
             list(request.users_ids),
         )
@@ -35,7 +34,6 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
             id=str(promo_code.id),
             code=promo_code.code,
             discount_percents=promo_code.discount_percents,
-            activation_quantity=promo_code.activation_quantity,
             expired_at=expired_at_ts,
             users_ids=promo_code.users_ids,
         )

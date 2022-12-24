@@ -11,8 +11,16 @@ class Settings(BaseSettings):
     reserve_timeout_seconds: int = Field(env="RESERVE_TIMEOUT_SECONDS", default=900)
 
     @property
-    def pg_connection_sting(self):
+    def common_pg_uri(self):
         return f"{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.pg_db}"
+
+    @property
+    def app_pg_uri(self):
+        return f"postgresql+asyncpg://{self.common_pg_uri}"
+
+    @property
+    def alembic_pg_uri(self):
+        return f"postgresql+psycopg://{self.common_pg_uri}"
 
 
 config = Settings()

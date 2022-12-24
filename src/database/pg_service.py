@@ -11,16 +11,13 @@ from utils import generate_code
 
 class PGService:
     def __init__(self):
-        self.engine = create_async_engine(
-            f"postgresql+asyncpg://{config.pg_connection_sting}", echo=True
-        )  # TODO: del echo
+        self.engine = create_async_engine(config.app_pg_uri)
         self.session = async_sessionmaker(self.engine, expire_on_commit=False)
 
     async def create_promo_code(
         self,
         code: str,
         discount_percents: int,
-        activation_quantity: int,
         expired_at: datetime,
         users_ids: list[int],
     ) -> PromoCode:
@@ -29,7 +26,6 @@ class PGService:
             promo_code = PromoCode(
                 code=code or generate_code(),
                 expired_at=expired_at,
-                activation_quantity=activation_quantity,
                 users_ids=users_ids,
                 discount_percents=discount_percents,
             )
@@ -60,7 +56,7 @@ class PGService:
             await session.commit()
             return promo_code_status
 
-    async def free_promo_code(self, reserve_id: uuid.UUID):
+    async def free_promo_code(self, reserve_id: uuid.UUID) -> None:
         async with self.session() as session:
             query = (
                 select(PromoCodeStatus)
@@ -69,12 +65,10 @@ class PGService:
             )
             result = await session.execute(query)
             promo_code_reserved: PromoCodeStatus = result.scalars().first()
-            if promo_code_reserved.created_at:
-                pass
             await session.execute(delete(PromoCodeStatus).where(PromoCodeStatus.id == reserve_id))
             await session.commit()
 
-    async def apply_promo_code(self, reserve_id):
+    async def apply_promo_code(self, reserve_id) -> None:
         async with self.session() as session:
             query = update(PromoCodeStatus).where(PromoCodeStatus.id == reserve_id).values(status=CodeStatus.applied)
             await session.execute(query)

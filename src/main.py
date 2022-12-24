@@ -4,7 +4,6 @@ import logging
 import grpc
 from grpc_reflection.v1alpha import reflection
 
-from database.models import connect_to_pg
 from database.pg_service import pg_service
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
@@ -14,7 +13,6 @@ _cleanup_coroutines = []
 
 
 async def serve() -> None:
-    # await connect_to_pg()
     server = grpc.aio.server()
     loyalty_pb2_grpc.add_PromoCodeServicer_to_server(PromoCode(), server)
     loyalty_pb2_grpc.add_DiscountServicer_to_server(Discount(), server)
