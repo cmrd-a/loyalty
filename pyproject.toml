@@ -15,6 +15,7 @@ grpcio-reflection = "^1.51.1"
 sqlalchemy = {extras = ["asyncio"], version = "^2.0.0b4", allow-prereleases = true}
 pytz = "^2022.7"
 psycopg = {extras = ["binary"], version = "^3.1.7"}
+asyncpg = "^0.27.0"
 
 [tool.black]
 line-length = 120
