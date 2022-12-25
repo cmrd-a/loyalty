@@ -9,8 +9,8 @@ class Settings(BaseSettings):
     pg_port: int = Field(env="LOYALTY_POSTGRES_PORT")
 
     reserve_timeout_seconds: int = Field(env="RESERVE_TIMEOUT_SECONDS", default=900)
-
     notifier_api_url: str = Field(env="NOTIFIER_API_URL", default="http://localhost")
+    app_listen_port: int = Field(env="LOYALTY_LISTEN_PORT", default=50051)
 
     @property
     def common_pg_uri(self):

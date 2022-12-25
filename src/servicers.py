@@ -6,7 +6,7 @@ from google.protobuf.timestamp_pb2 import Timestamp  # noqa
 from grpc import StatusCode
 from grpc.aio import ServicerContext
 from utils import send_email
-from config import config
+from core.config import config
 from database.models import CodeStatus, CodeOperation
 from database.service import db_svc
 from protos import loyalty_pb2
@@ -56,12 +56,12 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
 
         all_statuses = await db_svc.get_promo_code_statuses(user_promo_codes, request.user_id)
         timeout = datetime.timedelta(seconds=config.reserve_timeout_seconds)
-        timeouted_reserves = {
+        timeout_reserves = {
             status
             for status in all_statuses
             if now - status.created_at > timeout and status.status == CodeStatus.reserved
         }
-        blocked_statuses = set(all_statuses) - timeouted_reserves
+        blocked_statuses = set(all_statuses) - timeout_reserves
         status_codes_ids = [status.code_id for status in blocked_statuses]
         free_codes = [pc for pc in user_promo_codes if pc.id not in status_codes_ids]
         if not free_codes:
@@ -93,7 +93,7 @@ class Discount(loyalty_pb2_grpc.DiscountServicer):
     async def CreateV1(
         self, request: loyalty_pb2.CreateDiscountRequestV1, context: ServicerContext
     ) -> loyalty_pb2.CommonResponseV1:
-        user_discount = await db_svc.create_user_dicount(
+        user_discount = await db_svc.create_user_discount(
             request.user_id, request.discount_percents, request.expired_at.ToDatetime()
         )
         return loyalty_pb2.CommonResponseV1(id=str(user_discount.id))

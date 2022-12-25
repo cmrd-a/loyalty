@@ -118,7 +118,6 @@ click = ">=8.0.0"
 mypy-extensions = ">=0.4.3"
 pathspec = ">=0.9.0"
 platformdirs = ">=2"
-tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
@@ -238,6 +237,24 @@ files = [
 [package.extras]
 docs = ["Sphinx", "docutils (<0.18)"]
 test = ["faulthandler", "objgraph", "psutil"]
+
+[[package]]
+name = "grpc-interceptor"
+version = "0.15.0"
+description = "Simplifies gRPC interceptors"
+category = "main"
+optional = false
+python-versions = ">=3.6.1,<4.0.0"
+files = [
+    {file = "grpc-interceptor-0.15.0.tar.gz", hash = "sha256:5c1aa9680b1d7e12259960c38057b121826860b05ebbc1001c74343b7ad1455e"},
+    {file = "grpc_interceptor-0.15.0-py3-none-any.whl", hash = "sha256:63e390162e64df96c39c40508eb697def76a7cafac32a7eaf9272093eec1109e"},
+]
+
+[package.dependencies]
+grpcio = ">=1.32.0,<2.0.0"
+
+[package.extras]
+testing = ["protobuf (>=3.6.0)"]
 
 [[package]]
 name = "grpcio"
@@ -883,16 +900,22 @@ pymysql = ["pymysql"]
 sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
-name = "tomli"
-version = "2.0.1"
-description = "A lil' TOML parser"
-category = "dev"
+name = "structlog"
+version = "22.3.0"
+description = "Structured Logging for Python"
+category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
-    {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
+    {file = "structlog-22.3.0-py3-none-any.whl", hash = "sha256:b403f344f902b220648fa9f286a23c0cc5439a5844d271fec40562dbadbc70ad"},
+    {file = "structlog-22.3.0.tar.gz", hash = "sha256:e7509391f215e4afb88b1b80fa3ea074be57a5a17d794bd436a5c949da023333"},
 ]
+
+[package.extras]
+dev = ["structlog[docs,tests,typing]"]
+docs = ["furo", "myst-parser", "sphinx", "sphinx-notfound-page", "sphinxcontrib-mermaid", "twisted"]
+tests = ["coverage[toml]", "freezegun (>=0.2.8)", "pretend", "pytest (>=6.0)", "pytest-asyncio (>=0.17)", "simplejson"]
+typing = ["mypy", "rich", "twisted"]
 
 [[package]]
 name = "typing-extensions"
@@ -920,5 +943,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.10"
-content-hash = "ef8878670115e1fefbe389dcacc8ad192334897d58d2ab25e1c772ae4b5f92d5"
+python-versions = "^3.11"
+content-hash = "8ae84303710c6c37631c97ab48bb3380e0d43c1913187b490464e12582190bec"

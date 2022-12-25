@@ -4,7 +4,7 @@ import string
 
 import httpx
 
-from config import config
+from core.config import config
 
 
 def generate_code(len_promo: int = None) -> str:

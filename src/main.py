@@ -1,9 +1,10 @@
 import asyncio
-import logging
 
-import grpc
+from grpc.aio import server as grpc_aio_server
 from grpc_reflection.v1alpha import reflection
 
+from core.config import config
+from core.logging import log, LogInterceptor
 from database.service import db_svc
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
@@ -13,7 +14,7 @@ _cleanup_coroutines = []
 
 
 async def serve() -> None:
-    server = grpc.aio.server()
+    server = grpc_aio_server(interceptors=[LogInterceptor()])
     loyalty_pb2_grpc.add_PromoCodeServicer_to_server(PromoCode(), server)
     loyalty_pb2_grpc.add_DiscountServicer_to_server(Discount(), server)
 
@@ -24,14 +25,13 @@ async def serve() -> None:
     )
     reflection.enable_server_reflection(service_names, server)
 
-    listen_addr = "[::]:50051"
+    listen_addr = f"[::]:{config.app_listen_port}"
     server.add_insecure_port(listen_addr)
-    logging.info("Starting server on %s", listen_addr)
-    await server.start()
+    await log.ainfo("Starting server on %s", listen_addr)
     await server.start()
 
     async def server_graceful_shutdown():
-        logging.info("Starting graceful shutdown...")
+        await log.ainfo("Starting graceful shutdown...")
         await db_svc.engine.dispose()
         await server.stop(5)
 
@@ -40,8 +40,6 @@ async def serve() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     try:

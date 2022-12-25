@@ -1,11 +1,11 @@
+from typing import Sequence
 import uuid
 import datetime
 
-import pytz
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from config import config
+from core.config import config
 from database.models import PromoCode, PromoCodeStatus, CodeStatus, PromoCodeStatusLog, CodeOperation, UserDiscount
 from utils import generate_code
 
@@ -33,19 +33,19 @@ class DBService:
             await session.commit()
             return promo_code
 
-    async def get_promo_code_by_id(self, id_: uuid.UUID) -> PromoCode:
+    async def get_promo_code_by_id(self, id_: uuid.UUID) -> PromoCode | None:
         async with self.session() as session:
             query = select(PromoCode).where(PromoCode.id == id_)
             result = await session.execute(query)
             return result.scalars().first()
 
-    async def get_promo_codes_by_code(self, code: str) -> list[PromoCode]:
+    async def get_promo_codes_by_code(self, code: str) -> Sequence[PromoCode]:
         async with self.session() as session:
             query = select(PromoCode).where(PromoCode.code == code).order_by(PromoCode.created_at.desc())
             result = await session.execute(query)
             return result.scalars().all()
 
-    async def get_promo_code_statuses(self, promo_codes: list[PromoCode], user_id: int) -> list[PromoCodeStatus]:
+    async def get_promo_code_statuses(self, promo_codes: list[PromoCode], user_id: int) -> Sequence[PromoCodeStatus]:
         async with self.session() as session:
             query = (
                 select(PromoCodeStatus)
@@ -62,7 +62,7 @@ class DBService:
             await session.commit()
             return promo_code_status
 
-    async def free_promo_code(self, reserve_id: uuid.UUID) -> None:
+    async def free_promo_code(self, reserve_id: str) -> None:
         async with self.session() as session:
             await session.execute(delete(PromoCodeStatus).where(PromoCodeStatus.id == reserve_id))
             await session.commit()
@@ -73,19 +73,19 @@ class DBService:
             await session.execute(query)
             await session.commit()
 
-    async def get_promo_code_status(self, status_id: uuid.UUID) -> PromoCodeStatus:
+    async def get_promo_code_status(self, status_id: str) -> PromoCodeStatus | None:
         async with self.session() as session:
             query = select(PromoCodeStatus).where(PromoCodeStatus.id == status_id)
             result = await session.execute(query)
             return result.scalars().first()
 
-    async def create_promo_code_status_log(self, code: str, operation: CodeOperation, user_id: int = None) -> None:
+    async def create_promo_code_status_log(self, code: str, operation: CodeOperation, user_id: int | None) -> None:
         async with self.session() as session:
             log = PromoCodeStatusLog(code=code, operation=operation, user_id=user_id)
             session.add(log)
             await session.commit()
 
-    async def create_user_dicount(
+    async def create_user_discount(
         self, user_id: int, discount_percents: int, expired_at: datetime.datetime
     ) -> UserDiscount:
         async with self.session() as session:
@@ -94,7 +94,7 @@ class DBService:
             await session.commit()
             return user_discount
 
-    async def get_user_discount(self, user_id: int) -> UserDiscount:
+    async def get_user_discount(self, user_id: int) -> UserDiscount | None:
         async with self.session() as session:
             query = select(UserDiscount).where(UserDiscount.user_id == user_id)
             result = await session.execute(query)
