@@ -22,7 +22,6 @@ class DBService:
         expired_at: datetime.datetime,
         users_ids: list[int],
     ) -> PromoCode:
-        #  проверка, что не существует такого же активного(constraint?)
         async with self.session() as session:
             promo_code = PromoCode(
                 code=code or generate_code(),
@@ -65,13 +64,6 @@ class DBService:
 
     async def free_promo_code(self, reserve_id: uuid.UUID) -> None:
         async with self.session() as session:
-            query = (
-                select(PromoCodeStatus)
-                .where(PromoCodeStatus.id == reserve_id)
-                .where(PromoCodeStatus.status == CodeStatus.reserved)
-            )
-            result = await session.execute(query)
-            promo_code_reserved: PromoCodeStatus = result.scalars().first()
             await session.execute(delete(PromoCodeStatus).where(PromoCodeStatus.id == reserve_id))
             await session.commit()
 
