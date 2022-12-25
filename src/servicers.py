@@ -1,14 +1,14 @@
 import datetime
 
 import pytz
-from google.protobuf.timestamp_pb2 import Timestamp  # noqa
 from google.protobuf.empty_pb2 import Empty  # noqa
+from google.protobuf.timestamp_pb2 import Timestamp  # noqa
 from grpc import StatusCode
 from grpc.aio import ServicerContext
 
 from config import config
-from database.models import CodeStatus
-from database.pg_service import pg_service
+from database.models import CodeStatus, CodeOperation
+from database.service import db_svc
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
 
@@ -16,8 +16,8 @@ from protos import loyalty_pb2_grpc
 class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
     async def CreateV1(
         self, request: loyalty_pb2.CreatePromoCodeRequestV1, context: ServicerContext
-    ) -> loyalty_pb2.CreatePromoCodeResponseV1:  # TODO: add validation
-        promo_code = await pg_service.create_promo_code(
+    ) -> loyalty_pb2.CreatePromoCodeResponseV1:
+        promo_code = await db_svc.create_promo_code(
             request.code,
             request.discount_percents,
             request.expired_at.ToDatetime(),
@@ -41,7 +41,7 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
     async def ReserveV1(
         self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: ServicerContext
     ) -> loyalty_pb2.CommonResponseV1:
-        existed_promo_codes = await pg_service.get_promo_codes(request.code)
+        existed_promo_codes = await db_svc.get_promo_codes_by_code(request.code)
         if not existed_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Неверный промокод")
 
@@ -54,27 +54,38 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
         if not user_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Промокод недоступен пользователю")
 
-        all_statuses = await pg_service.get_promo_code_statuses(user_promo_codes, request.user_id)
+        all_statuses = await db_svc.get_promo_code_statuses(user_promo_codes, request.user_id)
         timeout = datetime.timedelta(seconds=config.reserve_timeout_seconds)
-        timeouted_reserves = [
-            s for s in all_statuses if now - s.created_at > timeout and s.status == CodeStatus.reserved
-        ]
-        blocked_statuses = set(all_statuses) - set(timeouted_reserves)
-        status_codes_ids = {s.code_id for s in blocked_statuses}
-        user_codes_ids = {pc.id for pc in user_promo_codes}
-        free_codes_ids = list((user_codes_ids - status_codes_ids))
-        if not free_codes_ids:
+        timeouted_reserves = {
+            status
+            for status in all_statuses
+            if now - status.created_at > timeout and status.status == CodeStatus.reserved
+        }
+        blocked_statuses = set(all_statuses) - timeouted_reserves
+        status_codes_ids = [status.code_id for status in blocked_statuses]
+        free_codes = [pc for pc in user_promo_codes if pc.id not in status_codes_ids]
+        if not free_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Промокод зарезервирован или использован")
 
-        promo_code_status = await pg_service.reserve_promo_code(free_codes_ids[0], request.user_id)
+        promo_code_status = await db_svc.reserve_promo_code(free_codes[0], request.user_id)
+        await db_svc.create_log(free_codes[0].code, CodeOperation.reserve, request.user_id)
         return loyalty_pb2.CommonResponseV1(id=str(promo_code_status.id))
 
     async def FreeV1(self, request: loyalty_pb2.ReserveIdRequestV1, context: ServicerContext) -> Empty:
-        await pg_service.free_promo_code(request.reserve_id)
+        status = await db_svc.get_promo_code_status(request.reserve_id)
+        code = await db_svc.get_promo_code_by_id(status.code_id)
+
+        await db_svc.free_promo_code(request.reserve_id)
+
+        await db_svc.create_log(code.code, CodeOperation.free, status.user_id)
         return Empty()
 
     async def ApplyV1(self, request: loyalty_pb2.ReserveIdRequestV1, context: ServicerContext) -> Empty:
-        await pg_service.apply_promo_code(request.reserve_id)
+        await db_svc.apply_promo_code(request.reserve_id)
+
+        status = await db_svc.get_promo_code_status(request.reserve_id)
+        code = await db_svc.get_promo_code_by_id(status.code_id)
+        await db_svc.create_log(code.code, CodeOperation.apply, status.user_id)
         return Empty()
 
 

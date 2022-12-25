@@ -1,6 +1,6 @@
+import datetime
 import enum
 import uuid
-from datetime import datetime
 
 from sqlalchemy import String, DateTime, text, Integer, SmallInteger, func, ARRAY, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, ENUM
@@ -22,7 +22,7 @@ class CodeOperation(enum.Enum):
 
 class Base(DeclarativeBase):
     id: Mapped[uuid.UUID] = mapped_column(UUID(), primary_key=True, server_default=text("public.uuid_generate_v4()"))
-    created_at: Mapped[datetime] = mapped_column(DateTime(True), server_default=func.CURRENT_TIMESTAMP())
+    created_at: Mapped[datetime.datetime] = mapped_column(DateTime(True), server_default=func.CURRENT_TIMESTAMP())
 
     __mapper_args__ = {"eager_defaults": True}
 
@@ -31,7 +31,7 @@ class PromoCode(Base):
     __tablename__ = "promo_codes"
 
     code: Mapped[str] = mapped_column(String(24), nullable=False, index=True)
-    expired_at: Mapped[datetime] = mapped_column(DateTime(True), nullable=False)
+    expired_at: Mapped[datetime.datetime] = mapped_column(DateTime(True), nullable=False)
     users_ids: Mapped[list[int]] = mapped_column(
         ARRAY(Integer()), server_default=text("ARRAY[]::integer[]"), nullable=False
     )
@@ -74,4 +74,4 @@ class Log(Base):
     operation: Mapped[str] = mapped_column(ENUM(CodeOperation, name="operation"))
 
     def __repr__(self):
-        return f"{self.__class__.__name__}({self.code!r}, {self.user_id!r})"
+        return f"{self.__class__.__name__}({self.code!r}, {self.operation!r})"
