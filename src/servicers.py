@@ -1,5 +1,6 @@
 import datetime
 
+import httpx
 import pytz
 from google.protobuf.empty_pb2 import Empty  # noqa
 from google.protobuf.timestamp_pb2 import Timestamp  # noqa
@@ -25,7 +26,23 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
         )
 
         if request.send_email:
-            pass
+            for user_id in promo_code.users_ids:
+                httpx.post(
+                    url=config.notifier_api_url,
+                    data={
+                        "users_ids": [user_id],
+                        "template_name": "promo.html",
+                        "status": "created",
+                        "channel": "email",
+                        "category": "promo",
+                        "variables": {
+                            "promo_code": promo_code.code,
+                            "discount_percents": promo_code.discount_percents,
+                            "text": "А вот вам промокод",
+                        },
+                        "send_time": datetime.datetime.now(),
+                    },
+                )
 
         expired_at_ts = Timestamp()
         expired_at_ts.FromDatetime(promo_code.expired_at)

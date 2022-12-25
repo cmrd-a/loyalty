@@ -10,6 +10,8 @@ class Settings(BaseSettings):
 
     reserve_timeout_seconds: int = Field(env="RESERVE_TIMEOUT_SECONDS", default=900)
 
+    notifier_api_url: str = Field(env="NOTIFIER_API_URL", default="http://localhost")
+
     @property
     def common_pg_uri(self):
         return f"{self.pg_user}:{self.pg_password}@{self.pg_host}:{self.pg_port}/{self.pg_db}"

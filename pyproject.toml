@@ -16,6 +16,7 @@ sqlalchemy = {extras = ["asyncio"], version = "^2.0.0b4", allow-prereleases = tr
 pytz = "^2022.7"
 psycopg = {extras = ["binary"], version = "^3.1.7"}
 asyncpg = "^0.27.0"
+httpx = "^0.23.1"
 
 [tool.black]
 line-length = 120
