@@ -68,7 +68,7 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
             await context.abort(StatusCode.INVALID_ARGUMENT, "Промокод зарезервирован или использован")
 
         promo_code_status = await db_svc.reserve_promo_code(free_codes[0], request.user_id)
-        await db_svc.create_log(free_codes[0].code, CodeOperation.reserve, request.user_id)
+        await db_svc.create_promo_code_status_log(free_codes[0].code, CodeOperation.reserve, request.user_id)
         return loyalty_pb2.CommonResponseV1(id=str(promo_code_status.id))
 
     async def FreeV1(self, request: loyalty_pb2.ReserveIdRequestV1, context: ServicerContext) -> Empty:
@@ -77,7 +77,7 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
 
         await db_svc.free_promo_code(request.reserve_id)
 
-        await db_svc.create_log(code.code, CodeOperation.free, status.user_id)
+        await db_svc.create_promo_code_status_log(code.code, CodeOperation.free, status.user_id)
         return Empty()
 
     async def ApplyV1(self, request: loyalty_pb2.ReserveIdRequestV1, context: ServicerContext) -> Empty:
@@ -85,7 +85,7 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
 
         status = await db_svc.get_promo_code_status(request.reserve_id)
         code = await db_svc.get_promo_code_by_id(status.code_id)
-        await db_svc.create_log(code.code, CodeOperation.apply, status.user_id)
+        await db_svc.create_promo_code_status_log(code.code, CodeOperation.apply, status.user_id)
         return Empty()
 
 
@@ -93,9 +93,17 @@ class Discount(loyalty_pb2_grpc.DiscountServicer):
     async def CreateV1(
         self, request: loyalty_pb2.CreateDiscountRequestV1, context: ServicerContext
     ) -> loyalty_pb2.CommonResponseV1:
-        return loyalty_pb2.CommonResponseV1(id="1")
+        user_discount = await db_svc.create_user_dicount(
+            request.user_id, request.discount_percents, request.expired_at.ToDatetime()
+        )
+        return loyalty_pb2.CommonResponseV1(id=str(user_discount.id))
 
-    async def GetV1(
-        self, request: loyalty_pb2.GetDiscountRequestV1, context: ServicerContext
-    ) -> loyalty_pb2.GetDiscountResponseV1:
-        return loyalty_pb2.GetDiscountResponseV1(discount_percents=1)
+    async def ApplyV1(
+        self, request: loyalty_pb2.ApplyDiscountRequestV1, context: ServicerContext
+    ) -> loyalty_pb2.ApplyDiscountResponseV1:
+        user_discount = await db_svc.get_user_discount(user_id=request.user_id)
+        if user_discount:
+            await db_svc.delete_user_discount(user_discount.id)
+            if user_discount.expired_at > datetime.datetime.utcnow().replace(tzinfo=pytz.utc):
+                return loyalty_pb2.ApplyDiscountResponseV1(discount_percents=user_discount.discount_percents)
+        return loyalty_pb2.ApplyDiscountResponseV1(discount_percents=0)

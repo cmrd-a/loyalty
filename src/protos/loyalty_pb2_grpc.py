@@ -180,10 +180,10 @@ class DiscountStub(object):
                 request_serializer=loyalty__pb2.CreateDiscountRequestV1.SerializeToString,
                 response_deserializer=loyalty__pb2.CommonResponseV1.FromString,
                 )
-        self.GetV1 = channel.unary_unary(
-                '/loyalty.Discount/GetV1',
-                request_serializer=loyalty__pb2.GetDiscountRequestV1.SerializeToString,
-                response_deserializer=loyalty__pb2.GetDiscountResponseV1.FromString,
+        self.ApplyV1 = channel.unary_unary(
+                '/loyalty.Discount/ApplyV1',
+                request_serializer=loyalty__pb2.ApplyDiscountRequestV1.SerializeToString,
+                response_deserializer=loyalty__pb2.ApplyDiscountResponseV1.FromString,
                 )
 
 
@@ -196,7 +196,7 @@ class DiscountServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetV1(self, request, context):
+    def ApplyV1(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -210,10 +210,10 @@ def add_DiscountServicer_to_server(servicer, server):
                     request_deserializer=loyalty__pb2.CreateDiscountRequestV1.FromString,
                     response_serializer=loyalty__pb2.CommonResponseV1.SerializeToString,
             ),
-            'GetV1': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetV1,
-                    request_deserializer=loyalty__pb2.GetDiscountRequestV1.FromString,
-                    response_serializer=loyalty__pb2.GetDiscountResponseV1.SerializeToString,
+            'ApplyV1': grpc.unary_unary_rpc_method_handler(
+                    servicer.ApplyV1,
+                    request_deserializer=loyalty__pb2.ApplyDiscountRequestV1.FromString,
+                    response_serializer=loyalty__pb2.ApplyDiscountResponseV1.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -243,7 +243,7 @@ class Discount(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetV1(request,
+    def ApplyV1(request,
             target,
             options=(),
             channel_credentials=None,
@@ -253,8 +253,8 @@ class Discount(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/loyalty.Discount/GetV1',
-            loyalty__pb2.GetDiscountRequestV1.SerializeToString,
-            loyalty__pb2.GetDiscountResponseV1.FromString,
+        return grpc.experimental.unary_unary(request, target, '/loyalty.Discount/ApplyV1',
+            loyalty__pb2.ApplyDiscountRequestV1.SerializeToString,
+            loyalty__pb2.ApplyDiscountResponseV1.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

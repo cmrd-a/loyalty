@@ -56,18 +56,8 @@ class PromoCodeStatus(Base):
         return f"{self.__class__.__name__}({self.user_id!r}, {self.status!r})"
 
 
-class UserDiscount(Base):
-    __tablename__ = "user_discounts"
-
-    user_id: Mapped[int] = mapped_column(Integer(), nullable=False)
-    discount_percents: Mapped[int] = mapped_column(SmallInteger(), nullable=False)
-
-    def __repr__(self):
-        return f"{self.__class__.__name__}({self.user_id!r}, {self.discount_percents!r})"
-
-
-class Log(Base):
-    __tablename__ = "logs"
+class PromoCodeStatusLog(Base):
+    __tablename__ = "promo_code_status_logs"
 
     code: Mapped[str] = mapped_column(String(24), nullable=False)
     user_id: Mapped[int] = mapped_column(Integer(), nullable=False)
@@ -75,3 +65,14 @@ class Log(Base):
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.code!r}, {self.operation!r})"
+
+
+class UserDiscount(Base):
+    __tablename__ = "user_discounts"
+
+    user_id: Mapped[int] = mapped_column(Integer(), nullable=False, unique=True, index=True)
+    discount_percents: Mapped[int] = mapped_column(SmallInteger(), nullable=False)
+    expired_at: Mapped[datetime.datetime] = mapped_column(DateTime(True), nullable=False)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}({self.user_id!r}, {self.discount_percents!r})"

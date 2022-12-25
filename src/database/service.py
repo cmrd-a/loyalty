@@ -1,11 +1,12 @@
 import uuid
-from datetime import datetime
+import datetime
 
+import pytz
 from sqlalchemy import select, delete, update
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from config import config
-from database.models import PromoCode, PromoCodeStatus, CodeStatus, Log, CodeOperation
+from database.models import PromoCode, PromoCodeStatus, CodeStatus, PromoCodeStatusLog, CodeOperation, UserDiscount
 from utils import generate_code
 
 
@@ -18,7 +19,7 @@ class DBService:
         self,
         code: str,
         discount_percents: int,
-        expired_at: datetime,
+        expired_at: datetime.datetime,
         users_ids: list[int],
     ) -> PromoCode:
         #  проверка, что не существует такого же активного(constraint?)
@@ -86,13 +87,30 @@ class DBService:
             result = await session.execute(query)
             return result.scalars().first()
 
-    async def get_user_dicount(self, user_id: int) -> int | None:
-        ...
-
-    async def create_log(self, code: str, operation: CodeOperation, user_id: int = None) -> None:
+    async def create_promo_code_status_log(self, code: str, operation: CodeOperation, user_id: int = None) -> None:
         async with self.session() as session:
-            log = Log(code=code, operation=operation, user_id=user_id)
+            log = PromoCodeStatusLog(code=code, operation=operation, user_id=user_id)
             session.add(log)
+            await session.commit()
+
+    async def create_user_dicount(
+        self, user_id: int, discount_percents: int, expired_at: datetime.datetime
+    ) -> UserDiscount:
+        async with self.session() as session:
+            user_discount = UserDiscount(user_id=user_id, discount_percents=discount_percents, expired_at=expired_at)
+            session.add(user_discount)
+            await session.commit()
+            return user_discount
+
+    async def get_user_discount(self, user_id: int) -> UserDiscount:
+        async with self.session() as session:
+            query = select(UserDiscount).where(UserDiscount.user_id == user_id)
+            result = await session.execute(query)
+            return result.scalars().first()
+
+    async def delete_user_discount(self, discount_id: uuid.UUID) -> None:
+        async with self.session() as session:
+            await session.execute(delete(UserDiscount).where(UserDiscount.id == discount_id))
             await session.commit()
 
 

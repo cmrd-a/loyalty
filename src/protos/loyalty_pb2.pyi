@@ -7,6 +7,18 @@ from typing import ClassVar as _ClassVar, Iterable as _Iterable, Mapping as _Map
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class ApplyDiscountRequestV1(_message.Message):
+    __slots__ = ["user_id"]
+    USER_ID_FIELD_NUMBER: _ClassVar[int]
+    user_id: int
+    def __init__(self, user_id: _Optional[int] = ...) -> None: ...
+
+class ApplyDiscountResponseV1(_message.Message):
+    __slots__ = ["discount_percents"]
+    DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
+    discount_percents: int
+    def __init__(self, discount_percents: _Optional[int] = ...) -> None: ...
+
 class CommonPromoCodeRequestV1(_message.Message):
     __slots__ = ["code", "user_id"]
     CODE_FIELD_NUMBER: _ClassVar[int]
@@ -58,18 +70,6 @@ class CreatePromoCodeResponseV1(_message.Message):
     id: str
     users_ids: _containers.RepeatedScalarFieldContainer[int]
     def __init__(self, id: _Optional[str] = ..., code: _Optional[str] = ..., discount_percents: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ..., users_ids: _Optional[_Iterable[int]] = ...) -> None: ...
-
-class GetDiscountRequestV1(_message.Message):
-    __slots__ = ["user_id"]
-    USER_ID_FIELD_NUMBER: _ClassVar[int]
-    user_id: int
-    def __init__(self, user_id: _Optional[int] = ...) -> None: ...
-
-class GetDiscountResponseV1(_message.Message):
-    __slots__ = ["discount_percents"]
-    DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
-    discount_percents: int
-    def __init__(self, discount_percents: _Optional[int] = ...) -> None: ...
 
 class ReserveIdRequestV1(_message.Message):
     __slots__ = ["reserve_id"]

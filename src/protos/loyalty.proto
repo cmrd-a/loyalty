@@ -14,7 +14,7 @@ service PromoCode {
 
 service Discount {
   rpc CreateV1 (CreateDiscountRequestV1) returns (CommonResponseV1) {}
-  rpc GetV1 (GetDiscountRequestV1) returns (GetDiscountResponseV1) {}
+  rpc ApplyV1 (ApplyDiscountRequestV1) returns (ApplyDiscountResponseV1) {}
 }
 
 message CreatePromoCodeRequestV1 {
@@ -52,10 +52,10 @@ message CreateDiscountRequestV1 {
    google.protobuf.Timestamp expired_at = 3;
 }
 
-message GetDiscountRequestV1 {
+message ApplyDiscountRequestV1 {
   int64 user_id = 1;
 }
 
-message GetDiscountResponseV1 {
+message ApplyDiscountResponseV1 {
   int32 discount_percents = 1;
 }
