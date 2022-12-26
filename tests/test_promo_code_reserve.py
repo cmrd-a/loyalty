@@ -6,6 +6,7 @@ from google.protobuf.timestamp_pb2 import Timestamp  # noqa
 
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
+from tests.config import SERVICE_URL
 
 
 def test_promo_code_reserve():
@@ -13,7 +14,7 @@ def test_promo_code_reserve():
     discount_percents = 10
     expired_at_ts = Timestamp()
     expired_at_ts.FromDatetime(datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=1))
-    with grpc.insecure_channel("localhost:50051") as channel:
+    with grpc.insecure_channel(SERVICE_URL) as channel:
         stub = loyalty_pb2_grpc.PromoCodeStub(channel)
         create_response = stub.CreateV1(
             loyalty_pb2.CreatePromoCodeRequestV1(
@@ -21,4 +22,4 @@ def test_promo_code_reserve():
             )
         )
         response = stub.ReserveV1(loyalty_pb2.CommonPromoCodeRequestV1(code=create_response.code, user_id=users_ids[0]))
-        assert response.id
+        assert response.reserve_id

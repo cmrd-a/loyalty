@@ -7,13 +7,13 @@ package loyalty;
 
 service PromoCode {
   rpc CreateV1 (CreatePromoCodeRequestV1) returns (CreatePromoCodeResponseV1) {}
-  rpc ReserveV1 (CommonPromoCodeRequestV1) returns (CommonResponseV1) {}
+  rpc ReserveV1 (CommonPromoCodeRequestV1) returns (ReservePromoCodeResponseV1) {}
   rpc FreeV1 (ReserveIdRequestV1) returns (google.protobuf.Empty) {}
   rpc ApplyV1 (ReserveIdRequestV1) returns (google.protobuf.Empty) {}
 }
 
 service Discount {
-  rpc CreateV1 (CreateDiscountRequestV1) returns (CommonResponseV1) {}
+  rpc CreateV1 (CreateDiscountRequestV1) returns (CreateDiscountResponseV1) {}
   rpc ApplyV1 (ApplyDiscountRequestV1) returns (ApplyDiscountResponseV1) {}
 }
 
@@ -33,7 +33,12 @@ message CreatePromoCodeResponseV1 {
   repeated int64 users_ids = 5;
 }
 
-message CommonResponseV1 {
+message ReservePromoCodeResponseV1 {
+  string reserve_id = 1;
+  int32 discount_percents = 2;
+}
+
+message CreateDiscountResponseV1 {
   string id = 1;
 }
 

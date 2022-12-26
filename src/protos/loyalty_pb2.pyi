@@ -27,12 +27,6 @@ class CommonPromoCodeRequestV1(_message.Message):
     user_id: int
     def __init__(self, code: _Optional[str] = ..., user_id: _Optional[int] = ...) -> None: ...
 
-class CommonResponseV1(_message.Message):
-    __slots__ = ["id"]
-    ID_FIELD_NUMBER: _ClassVar[int]
-    id: str
-    def __init__(self, id: _Optional[str] = ...) -> None: ...
-
 class CreateDiscountRequestV1(_message.Message):
     __slots__ = ["discount_percents", "expired_at", "user_id"]
     DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
@@ -42,6 +36,12 @@ class CreateDiscountRequestV1(_message.Message):
     expired_at: _timestamp_pb2.Timestamp
     user_id: int
     def __init__(self, user_id: _Optional[int] = ..., discount_percents: _Optional[int] = ..., expired_at: _Optional[_Union[_timestamp_pb2.Timestamp, _Mapping]] = ...) -> None: ...
+
+class CreateDiscountResponseV1(_message.Message):
+    __slots__ = ["id"]
+    ID_FIELD_NUMBER: _ClassVar[int]
+    id: str
+    def __init__(self, id: _Optional[str] = ...) -> None: ...
 
 class CreatePromoCodeRequestV1(_message.Message):
     __slots__ = ["code", "discount_percents", "expired_at", "send_email", "users_ids"]
@@ -76,3 +76,11 @@ class ReserveIdRequestV1(_message.Message):
     RESERVE_ID_FIELD_NUMBER: _ClassVar[int]
     reserve_id: str
     def __init__(self, reserve_id: _Optional[str] = ...) -> None: ...
+
+class ReservePromoCodeResponseV1(_message.Message):
+    __slots__ = ["discount_percents", "reserve_id"]
+    DISCOUNT_PERCENTS_FIELD_NUMBER: _ClassVar[int]
+    RESERVE_ID_FIELD_NUMBER: _ClassVar[int]
+    discount_percents: int
+    reserve_id: str
+    def __init__(self, reserve_id: _Optional[str] = ..., discount_percents: _Optional[int] = ...) -> None: ...

@@ -7,6 +7,7 @@ from google.protobuf.timestamp_pb2 import Timestamp  # noqa
 
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
+from tests.config import SERVICE_URL
 
 
 def test_discount_apply():
@@ -14,7 +15,7 @@ def test_discount_apply():
     user_id = randint(10, 999999)
     expired_at_ts = Timestamp()
     expired_at_ts.FromDatetime(datetime.utcnow().replace(tzinfo=pytz.utc) + timedelta(days=1))
-    with grpc.insecure_channel("localhost:50051") as channel:
+    with grpc.insecure_channel(SERVICE_URL) as channel:
         stub = loyalty_pb2_grpc.DiscountStub(channel)
         stub.CreateV1(
             loyalty_pb2.CreateDiscountRequestV1(
