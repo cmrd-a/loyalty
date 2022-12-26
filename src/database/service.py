@@ -45,7 +45,7 @@ class DBService:
             result = await session.execute(query)
             return result.scalars().all()
 
-    async def get_promo_code_statuses(self, promo_codes: list[PromoCode], user_id: int) -> Sequence[PromoCodeStatus]:
+    async def get_promo_codes_statuses(self, promo_codes: list[PromoCode], user_id: int) -> Sequence[PromoCodeStatus]:
         async with self.session() as session:
             query = (
                 select(PromoCodeStatus)

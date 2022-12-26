@@ -35,6 +35,6 @@ class LogInterceptor(AsyncServerInterceptor):
             if isinstance(response, Message):
                 log_params["response_message"] = MessageToDict(response)
 
-            await log.ainfo("request logged", **log_params)
+            await log.ainfo("request handled", **log_params)
 
         return response

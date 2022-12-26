@@ -7,7 +7,7 @@ import httpx
 from core.config import config
 
 
-def generate_code(len_promo: int = None) -> str:
+def generate_code(len_promo: int | None = None) -> str:
     """
     This function generate unique promo code from user.
     :param len_promo: number of characters in the promo code.

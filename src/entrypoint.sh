@@ -5,5 +5,4 @@ echo "Waiting for postgres..."
     done
 echo "PostgreSQL started"
 
-alembic -c alembic.ini upgrade head
 python main.py
