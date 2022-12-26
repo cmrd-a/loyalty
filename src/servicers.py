@@ -14,8 +14,9 @@ from protos import loyalty_pb2_grpc
 
 
 class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
+
     async def CreateV1(
-        self, request: loyalty_pb2.CreatePromoCodeRequestV1, context: ServicerContext
+            self, request: loyalty_pb2.CreatePromoCodeRequestV1, context: ServicerContext
     ) -> loyalty_pb2.CreatePromoCodeResponseV1:
         promo_code = await db_svc.create_promo_code(
             request.code,
@@ -38,9 +39,8 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
             users_ids=promo_code.users_ids,
         )
 
-    async def ReserveV1(
-        self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: ServicerContext
-    ) -> loyalty_pb2.CommonResponseV1:
+    async def reverse_checker(self, context, request) -> ():
+
         existed_promo_codes = await db_svc.get_promo_codes_by_code(request.code)
         if not existed_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Неверный промокод")
@@ -54,16 +54,32 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
         if not user_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Промокод недоступен пользователю")
 
-        all_statuses = await db_svc.get_promo_code_statuses(user_promo_codes, request.user_id)
+        return existed_promo_codes, unexpired_promo_codes, user_promo_codes, now
+
+    @staticmethod
+    async def get_timeout_reserves(all_statuses, now):
         timeout = datetime.timedelta(seconds=config.reserve_timeout_seconds)
         timeout_reserves = {
             status
             for status in all_statuses
             if now - status.created_at > timeout and status.status == CodeStatus.reserved
         }
+        return timeout_reserves
+
+    async def ReserveV1(
+            self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: ServicerContext
+    ) -> loyalty_pb2.CommonResponseV1:
+
+        existed_promo_codes, unexpired_promo_codes, user_promo_codes, now = self.reverse_checker(context, request)
+
+        all_statuses = await db_svc.get_promo_codes_statuses(user_promo_codes, request.user_id)
+
+        timeout_reserves = await self.get_timeout_reserves(all_statuses, now)
+
         blocked_statuses = set(all_statuses) - timeout_reserves
         status_codes_ids = [status.code_id for status in blocked_statuses]
         free_codes = [pc for pc in user_promo_codes if pc.id not in status_codes_ids]
+
         if not free_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Промокод зарезервирован или использован")
 
@@ -91,7 +107,7 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
 
 class Discount(loyalty_pb2_grpc.DiscountServicer):
     async def CreateV1(
-        self, request: loyalty_pb2.CreateDiscountRequestV1, context: ServicerContext
+            self, request: loyalty_pb2.CreateDiscountRequestV1, context: ServicerContext
     ) -> loyalty_pb2.CommonResponseV1:
         user_discount = await db_svc.create_user_discount(
             request.user_id, request.discount_percents, request.expired_at.ToDatetime()
@@ -99,7 +115,7 @@ class Discount(loyalty_pb2_grpc.DiscountServicer):
         return loyalty_pb2.CommonResponseV1(id=str(user_discount.id))
 
     async def ApplyV1(
-        self, request: loyalty_pb2.ApplyDiscountRequestV1, context: ServicerContext
+            self, request: loyalty_pb2.ApplyDiscountRequestV1, context: ServicerContext
     ) -> loyalty_pb2.ApplyDiscountResponseV1:
         user_discount = await db_svc.get_user_discount(user_id=request.user_id)
         if user_discount:
