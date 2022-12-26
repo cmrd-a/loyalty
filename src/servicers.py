@@ -7,7 +7,7 @@ from grpc import StatusCode
 from grpc.aio import ServicerContext
 from utils import send_email
 from core.config import config
-from database.models import CodeStatus, CodeOperation
+from database.models import CodeStatus, CodeOperation, PromoCode as PromoCodeModel, PromoCodeStatus
 from database.service import db_svc
 from protos import loyalty_pb2
 from protos import loyalty_pb2_grpc
@@ -38,13 +38,14 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
             users_ids=promo_code.users_ids,
         )
 
-    async def reverse_checker(self, context, request) -> ():
-
+    @staticmethod
+    async def get_user_promo_codes(
+        context: ServicerContext, request: loyalty_pb2.CommonPromoCodeRequestV1, now: datetime.datetime
+    ) -> list[PromoCodeModel]:
         existed_promo_codes = await db_svc.get_promo_codes_by_code(request.code)
         if not existed_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Неверный промокод")
 
-        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
         unexpired_promo_codes = [pc for pc in existed_promo_codes if pc.expired_at > now]
         if not unexpired_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Время действия промокода истекло")
@@ -53,10 +54,10 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
         if not user_promo_codes:
             await context.abort(StatusCode.INVALID_ARGUMENT, "Промокод недоступен пользователю")
 
-        return existed_promo_codes, unexpired_promo_codes, user_promo_codes, now
+        return user_promo_codes
 
     @staticmethod
-    async def get_timeout_reserves(all_statuses, now):
+    async def get_timeout_reserves(all_statuses: list[PromoCodeStatus], now: datetime.datetime):
         timeout = datetime.timedelta(seconds=config.reserve_timeout_seconds)
         timeout_reserves = {
             status
@@ -68,13 +69,10 @@ class PromoCode(loyalty_pb2_grpc.PromoCodeServicer):
     async def ReserveV1(
         self, request: loyalty_pb2.CommonPromoCodeRequestV1, context: ServicerContext
     ) -> loyalty_pb2.CommonResponseV1:
-
-        existed_promo_codes, unexpired_promo_codes, user_promo_codes, now = self.reverse_checker(context, request)
-
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        user_promo_codes = await self.get_user_promo_codes(context, request, now)
         all_statuses = await db_svc.get_promo_codes_statuses(user_promo_codes, request.user_id)
-
         timeout_reserves = await self.get_timeout_reserves(all_statuses, now)
-
         blocked_statuses = set(all_statuses) - timeout_reserves
         status_codes_ids = [status.code_id for status in blocked_statuses]
         free_codes = [pc for pc in user_promo_codes if pc.id not in status_codes_ids]
