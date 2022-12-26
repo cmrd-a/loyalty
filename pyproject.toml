@@ -19,6 +19,7 @@ asyncpg = "^0.27.0"
 httpx = "^0.23.1"
 grpc-interceptor = "^0.15.0"
 structlog = "^22.3.0"
+greenlet = "^2.0.1"
 
 [tool.black]
 line-length = 120
@@ -33,6 +34,7 @@ ignore = ["E999"]
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
 ruff = "^0.0.192"
+pytest = "^7.2.0"
 
 [build-system]
 requires = ["poetry-core"]
