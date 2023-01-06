@@ -12,7 +12,7 @@ grpcio-tools = "^1.51.1"
 alembic = "^1.9.1"
 pydantic = "^1.10.2"
 grpcio-reflection = "^1.51.1"
-sqlalchemy = {extras = ["asyncio"], version = "^2.0.0b4", allow-prereleases = true}
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.0rc1", allow-prereleases = true}
 pytz = "^2022.7"
 psycopg = {extras = ["binary"], version = "^3.1.7"}
 asyncpg = "^0.27.0"
@@ -33,8 +33,8 @@ ignore = ["E999"]
 
 [tool.poetry.group.dev.dependencies]
 black = "^22.12.0"
-ruff = "^0.0.194"
 pytest = "^7.2.0"
+ruff = "^0.0.212"
 
 [build-system]
 requires = ["poetry-core"]
